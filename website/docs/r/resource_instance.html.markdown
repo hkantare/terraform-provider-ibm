@@ -13,24 +13,31 @@ Provides a Resource Instance resource. This allows Resource Instances to be crea
 
 ## Example Usage
 
-```terraform
+```
 data "ibm_resource_group" "group" {
-  name = "test"
+  name = "default"
 }
 
-resource "ibm_resource_instance" "resource_instance" {
-  name              = "test"
-  service           = "cloud-object-storage"
-  plan              = "lite"
-  location          = "global"
+resource "ibm_resource_instance" "myhpdbcluster" {
+  name = "0001-postgresql"
+  service = "hyperp-dbaas-postgresql"
+  plan = "postgresql-free"
+  location = "us-south"
   resource_group_id = data.ibm_resource_group.group.id
-  tags              = ["tag1", "tag2"]
 
   //User can increase timeouts
   timeouts {
     create = "15m"
     update = "15m"
     delete = "15m"
+  }
+
+  parameters = {
+    name: "cluster01",
+    admin_name: "admin",
+    password: "Hyperprotectdbaas0001"
+    confirm_password: "Hyperprotectdbaas0001",
+    db_version: "10"
   }
 }
 ```
@@ -42,27 +49,31 @@ The following is an example to create a service instance of IBM Cloud Hyper Prot
 data "ibm_resource_group" "group" {
   name = "default"
 }
+
 resource "ibm_resource_instance" "myhpdbcluster" {
   name = "0001-postgresql"
   service = "hyperp-dbaas-postgresql"
   plan = "postgresql-free"
   location = "us-south"
   resource_group_id = data.ibm_resource_group.group.id
+
+  //User can increase timeouts
   timeouts {
     create = "15m"
     update = "15m"
     delete = "15m"
   }
+
   parameters = {
-    "name": "cluster01",
-    "admin_name": "admin",
-    "password": "Hyperprotectdbaas0001"
-    "confirm_password": "Hyperprotectdbaas0001",
-    "db_version": "10"
+    name: "cluster01",
+    admin_name: "admin",
+    password: "Hyperprotectdbaas0001"
+    confirm_password: "Hyperprotectdbaas0001",
+    db_version: "10"
   }
 }
-```
 
+```
 
 ## Timeouts
 
